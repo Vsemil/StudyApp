@@ -1,13 +1,13 @@
 package ru.firstline.studyapp.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class WelcomeController {
-    @GetMapping("/123")
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index() {
-        System.out.println("----This line is executed on tomcat console---");
         return "index";
     }
 }
