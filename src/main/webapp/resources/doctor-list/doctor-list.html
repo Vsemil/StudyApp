@@ -1,2 +1,70 @@
-<li ng-repeat="doctor in doctors">{{doctor.name}}</li>
-{{doctors}}
+
+<div class="row">
+    <div class="col-sm">
+        <table class="table table-hover" st-table="doctors">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col" style="width: 10%">#</th>
+                <th scope="col" st-sort="name">Name</th>
+                <th style="width: 15%"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="doctor in doctors">
+                <th scope="row" class="align-middle">{{$index + 1 + indexOffset}}</th>
+                <td class="align-middle">{{doctor.name}}</td>
+                <td class="d-flex justify-content-end">
+                    <a href="#!/doctors/{{doctor.id}}"
+                       class="mx-2 btn btn-light btn-resize"
+                       data-toggle="tooltip"
+                       title="Edit">
+                        <span class="fas fa-edit"></span>
+                    </a>
+                    <button type="button"
+                            data-toggle="modal"
+                            data-target="#exampleModal"
+                            ng-click="remove(doctor)"
+                            class="mx-2 btn btn-light btn-resize"
+                            data-toggle="tooltip"
+                            title="Remove">
+                        <span class="fas fa-trash-alt"></span>
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td>
+                    <a class="btn btn-primary mt-3" href="#!/addNew">Add</a>
+                </td>
+                <td colspan="4" >
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div st-pagination="" st-items-by-page="itemsByPage" ></div>
+                    </div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Attention!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Do you really want to delete "{{removeDoctor.name}}"?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" ng-click="deletePart()" data-dismiss="modal">Remove</button>
+            </div>
+        </div>
+    </div>
+</div>
