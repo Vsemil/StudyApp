@@ -1,9 +1,18 @@
 package ru.firstline.studyapp.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "patient")
 public class PatientEntity extends AbstractNamedEntity{
+
+    @Column(name = "sex")
     private Boolean sex;
+
+    @Column(name = "day_of_birth")
     private LocalDate dayOfBirth;
 
     public PatientEntity() {

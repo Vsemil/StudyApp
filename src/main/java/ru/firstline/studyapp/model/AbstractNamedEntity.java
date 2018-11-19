@@ -1,6 +1,14 @@
 package ru.firstline.studyapp.model;
 
+import org.springframework.lang.NonNull;
+
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+
+@MappedSuperclass
 public abstract class AbstractNamedEntity extends AbstractBaseEntity {
+    @Column(name = "name", nullable = false)
+    @NonNull
     protected String name;
 
     public AbstractNamedEntity() {

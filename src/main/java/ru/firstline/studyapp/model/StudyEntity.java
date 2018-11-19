@@ -1,12 +1,33 @@
 package ru.firstline.studyapp.model;
 
+import org.springframework.lang.NonNull;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "study_1")
 public class StudyEntity extends AbstractBaseEntity {
+
+    @ManyToOne
+    @JoinColumn(name = "patient_id", referencedColumnName = "id", nullable = false)
+    @NonNull
     private PatientEntity patient;
+
+    @Column(name = "description", nullable = false)
+    @NonNull
     private String description;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "status", nullable = false)
+    @NonNull
     private Status status;
+
+    @Column(name = "planned_start_time", nullable = false)
+    @NonNull
     private LocalDateTime plannedStartTime;
+
+    @Column(name = "estimated_end_time")
     private LocalDateTime estimatedEndTime;
 
     public StudyEntity() {

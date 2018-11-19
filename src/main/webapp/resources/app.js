@@ -10,6 +10,11 @@ angular.module('app', ['smart-table', 'ngRoute'])
                 templateUrl:'resources/patients-list/patients-list.html',
                 controller:'patientsListController'
             });
+        $routeProvider.when('/doctors',
+            {
+                templateUrl:'resources/doctor-list/doctor-list.html',
+                controller:'doctorListController'
+            });
         $routeProvider.otherwise({redirectTo: '/'});
     })
     .controller('mainController', function($scope, $location) {
