@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "study_1")
+@Table(name = "study")
 public class StudyEntity extends AbstractBaseEntity {
 
     @ManyToOne
