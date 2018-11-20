@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.firstline.studyapp.exception.NotFoundException;
 import ru.firstline.studyapp.model.DoctorEntity;
 import ru.firstline.studyapp.model.dto.Doctor;
 import ru.firstline.studyapp.model.mapper.DoctorMapper;
@@ -25,8 +26,9 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public Doctor findById(Integer id) {
-        return doctorMapper.map(doctorRepository.findById(id), Doctor.class);
+    public Doctor findById(Integer id) throws NotFoundException {
+        DoctorEntity doctorEntity = doctorRepository.findById(id).orElseThrow(()->new NotFoundException("Doctor not found!"));
+        return doctorMapper.map(doctorEntity, Doctor.class);
     }
 
     @Override
