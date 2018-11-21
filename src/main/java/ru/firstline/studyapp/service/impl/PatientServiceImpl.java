@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.firstline.studyapp.exception.NotFoundException;
 import ru.firstline.studyapp.model.PatientEntity;
 import ru.firstline.studyapp.model.dto.Patient;
 import ru.firstline.studyapp.model.mapper.PatientMapper;
 import ru.firstline.studyapp.repository.PatientRepository;
 import ru.firstline.studyapp.service.PatientService;
+
+import java.util.List;
 
 @Service
 public class PatientServiceImpl implements PatientService {
@@ -25,8 +28,13 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    public List<Patient> findAll() {
+        return patientMapper.mapAsList(patientRepository.findAll(), Patient.class);
+    }
+
+    @Override
     public Patient findById(Integer id) {
-        return patientMapper.map(patientRepository.findById(id), Patient.class);
+        return patientMapper.map(patientRepository.findById(id).orElseThrow(()->new NotFoundException("Patient not found")), Patient.class);
     }
 
     @Override

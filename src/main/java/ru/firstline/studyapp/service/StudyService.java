@@ -14,4 +14,6 @@ public interface StudyService {
     void delete(Study study);
 
     void delete(Integer id);
+
+    void setStatus(Study study);
 }

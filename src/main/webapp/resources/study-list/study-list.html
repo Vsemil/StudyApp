@@ -1,25 +1,35 @@
-<h2>Patients</h2>
+<h2>Study Scheduling</h2>
 <div class="row">
     <div class="col-sm">
-        <table class="table table-hover" st-table="patients" st-pipe="getPatients">
+        <table class="table table-hover" st-table="study" st-pipe="getStudy">
             <thead class="thead-light">
             <tr>
                 <th scope="col" style="width: 5%">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Sex</th>
-                <th scope="col">Day of Birth</th>
+                <th scope="col">Patient</th>
+                <th scope="col">Description</th>
+                <th scope="col">Status</th>
+                <th scope="col" style="width: 80px">Planned Start time</th>
+                <th scope="col" style="width: 80px">Estimated End time</th>
                 <th style="width: 15%"></th>
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="patient in patients">
+            <tr ng-repeat="stud in study">
                 <th scope="row" class="align-middle">{{$index + 1 + indexOffset}}</th>
-                <td class="align-middle">{{patient.name}}</td>
-                <td class="align-middle" ng-if="patient.sex === null"></td>
-                <td class="align-middle" ng-if="patient.sex !== null">{{patient.sex ? 'man' : 'woman'}}</td>
-                <td class="align-middle">{{patient.dayOfBirth}}</td>
+                <td class="align-middle">{{stud.patient.name}}</td>
+                <td class="align-middle">{{stud.description}}</td>
+                <td class="align-middle">
+                    <select ng-model="stud.status" ng-change="selectStatus(stud)" class="form-control"
+                    style="min-width: 130px">
+                        <option value="PLANNED">Planned</option>
+                        <option value="IN_PROGRESS">In progress</option>
+                        <option value="FINISHED">Finished</option>
+                    </select>
+                </td>
+                <td class="align-middle">{{stud.plannedStartTime}}</td>
+                <td class="align-middle">{{stud.estimatedEndTime}}</td>
                 <td class="d-flex justify-content-end">
-                    <a href="#!/patients/{{patient.id}}"
+                    <a href="#!/study/{{stud.id}}"
                        class="mx-2 btn btn-light btn-resize"
                        data-toggle="tooltip"
                        title="Edit">
@@ -28,7 +38,7 @@
                     <button type="button"
                             data-toggle="modal"
                             data-target="#exampleModal"
-                            ng-click="remove(patient)"
+                            ng-click="remove(stud)"
                             class="mx-2 btn btn-light btn-resize"
                             data-toggle="tooltip"
                             title="Remove">
@@ -40,7 +50,7 @@
             <tfoot>
             <tr>
                 <td>
-                    <a class="btn btn-primary mt-3" href="#!/patients/new">Add</a>
+                    <a class="btn btn-primary mt-3" href="#!/study/new">Add</a>
                 </td>
                 <td colspan="6" >
                     <div class="d-flex justify-content-center align-items-center">
@@ -64,7 +74,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                Do you really want to delete "{{removePatient.name}}"?
+                Do you really want to delete "{{removeStudy.description}}"?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

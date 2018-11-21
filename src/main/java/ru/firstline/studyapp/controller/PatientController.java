@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.firstline.studyapp.model.dto.Patient;
 import ru.firstline.studyapp.service.PatientService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "patients")
 public class PatientController {
@@ -16,6 +18,11 @@ public class PatientController {
     @GetMapping(value = "/all")
     public Page<Patient> getAll(Pageable pageable) {
         return patientService.findAll(pageable);
+    }
+
+    @GetMapping(value = "/allList")
+    public List<Patient> getAllList() {
+        return patientService.findAll();
     }
 
     @GetMapping(value = "/{id}")

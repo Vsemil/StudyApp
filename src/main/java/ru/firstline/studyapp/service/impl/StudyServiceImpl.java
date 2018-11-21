@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.firstline.studyapp.exception.NotFoundException;
 import ru.firstline.studyapp.model.StudyEntity;
 import ru.firstline.studyapp.model.dto.Study;
 import ru.firstline.studyapp.model.mapper.StudyMapper;
@@ -26,7 +27,7 @@ public class StudyServiceImpl implements StudyService {
 
     @Override
     public Study findById(Integer id) {
-        return studyMapper.map(studyRepository.findById(id), Study.class);
+        return studyMapper.map(studyRepository.findById(id).orElseThrow(()->new NotFoundException("Study not found")), Study.class);
     }
 
     @Override
@@ -46,5 +47,13 @@ public class StudyServiceImpl implements StudyService {
     @Override
     public void delete(Integer id) {
         studyRepository.deleteById(id);
+    }
+
+    @Override
+    public void setStatus(Study study) {
+        StudyEntity studyEntity = studyRepository.findById(study.getId())
+                .orElseThrow(()->new NotFoundException("Study not found"));
+        studyEntity.setStatus(study.getStatus());
+        studyRepository.save(studyEntity);
     }
 }

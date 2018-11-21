@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.firstline.studyapp.exception.NotFoundException;
 import ru.firstline.studyapp.model.RoomEntity;
 import ru.firstline.studyapp.model.dto.Room;
 import ru.firstline.studyapp.model.mapper.RoomMapper;
@@ -26,7 +27,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Room findById(Integer id) {
-        return roomMapper.map(roomRepository.findById(id), Room.class);
+        return roomMapper.map(roomRepository.findById(id).orElseThrow(()->new NotFoundException("Room not found")), Room.class);
     }
 
     @Override

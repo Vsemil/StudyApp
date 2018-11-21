@@ -1,5 +1,6 @@
 package ru.firstline.studyapp.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import ru.firstline.studyapp.model.Status;
 
 import java.io.Serializable;
@@ -11,7 +12,9 @@ public class Study implements Serializable {
     private Patient patient;
     private String description;
     private Status status;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
     private LocalDateTime plannedStartTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
     private LocalDateTime estimatedEndTime;
 
     public Integer getId() {

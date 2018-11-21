@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="col-sm">
+        <div class="m-3">
+            <h2 ng-if="patient.id !== undefined">Edit Patient</h2>
+            <h2 ng-if="patient.id === undefined">Add new Patient</h2>
+            <form name="myForm" ng-submit="savePatient();">
+                <div class="form-group">
+                    <label for="name" >Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="enter patient name"
+                           ng-model="patient.name" required>
+                </div>
+                <div class="form-group">
+                    <div class="d-flex justify-content-around mt-3">
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="man" name="sex" class="custom-control-input"
+                                   ng-model="patient.sex" ng-value="true">
+                            <label class="custom-control-label"  for="man" >Man</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="woman" name="sex" class="custom-control-input"
+                                   ng-model="patient.sex" ng-value="false">
+                            <label class="custom-control-label" for="woman">Woman</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="dayOfBirth" >Day Of Birth</label>
+                    <input type="date" class="form-control" id="dayOfBirth" ng-model="patient.db">
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+                <botton class="btn btn-secondary" ng-click="back()">Back</botton>
+            </form>
+        </div>
+    </div>
+</div>

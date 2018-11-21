@@ -32,4 +32,9 @@ public class StudyController {
     public void delete(@PathVariable Integer id) {
         studyService.delete(id);
     }
+
+    @PutMapping(value = "/setStatus")
+    public void setStatus(@RequestBody Study study){
+        studyService.setStatus(study);
+    }
 }

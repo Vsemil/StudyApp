@@ -1,5 +1,7 @@
 package ru.firstline.studyapp.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -8,6 +10,7 @@ public class Patient implements Serializable {
     private Integer id;
     private String name;
     private Boolean sex;
+    @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDate dayOfBirth;
 
     public Integer getId() {
