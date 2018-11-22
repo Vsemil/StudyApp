@@ -1,4 +1,4 @@
-angular.module('app').controller('studyListController', function($scope, $http) {
+angular.module('app').controller('studyListController', function($scope, $http, AlertService) {
     $scope.study = [];
     $scope.indexOffset = 0;
     $scope.itemsByPage = 10;
@@ -28,12 +28,15 @@ angular.module('app').controller('studyListController', function($scope, $http) 
             if (index !== -1) {
                 $scope.study.splice(index, 1);
             }
+            AlertService.add('success', 'Study successfully removed');
         })
     };
 
     $scope.selectStatus = function (study) {
         $http.put('/study/setStatus', study).then(function (value) {
-
+            AlertService.add('success', 'Status has been changed');
+        }, function (reason) {
+            AlertService.add('dander', 'Status not changed');
         })
     }
 });

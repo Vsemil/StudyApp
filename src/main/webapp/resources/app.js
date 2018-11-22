@@ -50,4 +50,50 @@ angular.module('app', ['smart-table', 'ngRoute'])
     })
     .controller('mainController', function($scope, $location) {
         $scope.location = $location
-    });
+    })
+    .factory('AlertService', ['$timeout', '$rootScope', function ($timeout, $rootScope) {
+        var service = {};
+
+        var alerts = [];
+
+        $rootScope.alerts = alerts;
+
+        service.closeAlertIdx = function (index) {
+            return alerts.splice(index, 1);
+        };
+
+        service.closeAlert = function (alert) {
+            return service.closeAlertIdx(alerts.indexOf(alert));
+        };
+
+        service.add = function(type, msg, timeout){
+            var alert = {
+                type: type,
+                msg: msg,
+                close: function () {
+                    return service.closeAlert(this);
+                }
+            };
+            if (type === 'success') {
+                $timeout(function(){
+                    alert.close();
+                }, 3000);
+            }
+            if(timeout){
+                $timeout(function(){
+                    alert.close();
+                }, timeout);
+            }
+            return alerts.push(alert);
+        };
+
+        service.clear = function () {
+            alerts.length = 0;
+        };
+
+        service.get = function () {
+            return alerts;
+        };
+
+        return service;
+    }]);

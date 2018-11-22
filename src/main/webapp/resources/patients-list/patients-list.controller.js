@@ -1,4 +1,4 @@
-angular.module('app').controller('patientsListController', function($scope, $http) {
+angular.module('app').controller('patientsListController', function($scope, $http, AlertService) {
     $scope.patients = [];
     $scope.indexOffset = 0;
     $scope.itemsByPage = 10;
@@ -27,6 +27,11 @@ angular.module('app').controller('patientsListController', function($scope, $htt
             var index = $scope.patients.indexOf($scope.removePatient);
             if (index !== -1) {
                 $scope.patients.splice(index, 1);
+            }
+            AlertService.add('success', 'Patient successfully removed');
+        }, function (reason) { 
+            if (reason.data.status === 'CONFLICT') {
+                AlertService.add('danger', 'It is not possible to remove this patient, as there is research with him')
             }
         })
     };

@@ -1,4 +1,4 @@
-angular.module('app').controller('roomsListController', function($scope, $http) {
+angular.module('app').controller('roomsListController', function($scope, $http, AlertService) {
     $scope.rooms = [];
     $scope.indexOffset = 0;
     $scope.itemsByPage = 10;
@@ -28,6 +28,7 @@ angular.module('app').controller('roomsListController', function($scope, $http) 
             if (index !== -1) {
                 $scope.rooms.splice(index, 1);
             }
+            AlertService.add('success', 'Room successfully removed');
         })
     };
 });

@@ -1,5 +1,6 @@
 package ru.firstline.studyapp.controller;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -45,5 +46,16 @@ public class RestExceptionHandler {
                 .withDetail(ex.getMessage())
                 .build();
         return response;
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler({DataIntegrityViolationException.class})
+    public ApiErrorResponse handleIllegalArgumentException(DataIntegrityViolationException ex) {
+        return new ApiErrorResponse.ApiErrorResponseBuilder()
+                .withStatus(HttpStatus.CONFLICT)
+                .withError_code(HttpStatus.CONFLICT.name())
+                .withMessage(ex.getLocalizedMessage())
+                .withDetail(ex.getMessage())
+                .build();
     }
 }

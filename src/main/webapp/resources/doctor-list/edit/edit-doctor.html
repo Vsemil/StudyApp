@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="col-sm">
+        <div class="m-3">
+            <h2 ng-if="doctor.id !== undefined">Edit Doctor</h2>
+            <h2 ng-if="doctor.id === undefined">Add new Doctor</h2>
+            <form name="myForm" ng-submit="saveDoctor();">
+                <div class="form-group">
+                    <label for="name" >Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="enter doctor name"
+                           ng-model="doctor.name" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+                <botton class="btn btn-secondary" ng-click="back()">Back</botton>
+            </form>
+        </div>
+    </div>
+</div>

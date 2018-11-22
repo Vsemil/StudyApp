@@ -1,4 +1,4 @@
-angular.module('app').controller('doctorListController', function($scope, $http) {
+angular.module('app').controller('doctorListController', function($scope, $http, AlertService) {
     $scope.doctors = [];
     $scope.indexOffset = 0;
     $scope.itemsByPage = 10;
@@ -28,6 +28,7 @@ angular.module('app').controller('doctorListController', function($scope, $http)
             if (index !== -1) {
                 $scope.doctors.splice(index, 1);
             }
+            AlertService.add('success', 'Doctor successfully removed');
         })
     };
 
