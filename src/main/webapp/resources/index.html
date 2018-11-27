@@ -10,7 +10,7 @@
 <body ng-controller="mainController">
 <div class="container">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#">Procedure scheduling</a>
+        <a class="navbar-brand" href="#!/">Procedure scheduling</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -33,6 +33,11 @@
                     <a class="nav-link" href="#!/rooms">Rooms</a>
                 </li>
             </ul>
+            <a ng-if="!session.username" class="btn btn-outline-light my-2 my-sm-0" href="#!/login">Login</a>
+            <div ng-if="session.username" class="d-flex flex-row">
+                <div class="my-auto mx-3 text-light">{{session.username}}</div>
+                <button class="btn btn-outline-light my-2 my-sm-0" ng-click="logout()">Logout</button>
+            </div>
         </div>
     </nav>
     <div ng-repeat="alert in alerts" class="m-1 alert alert-{{alert.type}} alert-dismissible" role="alert">
@@ -46,6 +51,7 @@
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular-cookies.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular-route.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-smart-table/2.1.11/smart-table.min.js"></script>
 <script src="/resources/app.js"></script>
@@ -58,6 +64,7 @@
 <script src="/resources/room-list/edit/edit-room.controller.js"></script>
 <script src="/resources/study-list/study-list.controller.js"></script>
 <script src="/resources/study-list/edit/edit-study.controller.js"></script>
+<script src="/resources/security/login.controller.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>

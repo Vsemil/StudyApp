@@ -1,4 +1,4 @@
-package ru.firstline.studyapp;
+package ru.firstline.studyapp.spring;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +21,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories
+@EnableJpaRepositories("ru.firstline.studyapp.repository")
 @PropertySource("classpath:/app.properties")
 public class PersistenceJPAConfig {
 

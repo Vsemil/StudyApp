@@ -1,4 +1,4 @@
-package ru.firstline.studyapp;
+package ru.firstline.studyapp.spring;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

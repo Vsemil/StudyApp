@@ -1,11 +1,13 @@
-package ru.firstline.studyapp;
+package ru.firstline.studyapp.spring;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+import ru.firstline.studyapp.security.SecurityJavaConfig;
 
 public class ApplicationInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     protected Class<?>[] getRootConfigClasses() {
         return new Class[]{
-                ApplicationConfiguration.class
+                ApplicationConfiguration.class,
+                SecurityJavaConfig.class
         };
     }
 

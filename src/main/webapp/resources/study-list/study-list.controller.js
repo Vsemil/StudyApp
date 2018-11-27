@@ -36,7 +36,7 @@ angular.module('app').controller('studyListController', function($scope, $http, 
         $http.put('/study/setStatus', study).then(function (value) {
             AlertService.add('success', 'Status has been changed');
         }, function (reason) {
-            AlertService.add('dander', 'Status not changed');
+            AlertService.add('danger', 'Status not changed');
         })
     }
 });

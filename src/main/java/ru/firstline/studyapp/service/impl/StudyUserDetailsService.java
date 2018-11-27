@@ -5,7 +5,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.firstline.studyapp.StudyAppUserPrincipal;
 import ru.firstline.studyapp.model.UserEntity;
 import ru.firstline.studyapp.repository.UserRepository;
 
@@ -21,6 +20,6 @@ public class StudyUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
-        return new StudyAppUserPrincipal(user);
+        return user;
     }
 }
