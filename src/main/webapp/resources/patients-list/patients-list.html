@@ -3,46 +3,67 @@
     <div class="col-sm">
         <table class="table table-hover" st-table="patients" st-pipe="getPatients">
             <thead class="thead-light">
-            <tr>
-                <th scope="col" style="width: 5%">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Sex</th>
-                <th scope="col">Day of Birth</th>
-                <th style="width: 15%"></th>
-            </tr>
+                <tr>
+                    <th scope="col" style="width: 5%">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Sex</th>
+                    <th scope="col">Day of Birth</th>
+                    <th style="width: 15%"></th>
+                </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="patient in patients">
-                <th scope="row" class="align-middle">{{$index + 1 + indexOffset}}</th>
-                <td class="align-middle">{{patient.name}}</td>
-                <td class="align-middle" ng-if="patient.sex === null"></td>
-                <td class="align-middle" ng-if="patient.sex !== null">{{patient.sex ? 'man' : 'woman'}}</td>
-                <td class="align-middle">{{patient.dayOfBirth}}</td>
-                <td class="d-flex justify-content-end">
-                    <a href="#!/patients/{{patient.id}}"
-                       class="mx-2 btn btn-light btn-resize"
-                       data-toggle="tooltip"
-                       title="Edit">
-                        <span class="fas fa-edit"></span>
-                    </a>
-                    <button type="button"
-                            data-toggle="modal"
-                            data-target="#exampleModal"
-                            ng-click="remove(patient)"
-                            class="mx-2 btn btn-light btn-resize"
-                            data-toggle="tooltip"
-                            title="Remove">
-                        <span class="fas fa-trash-alt"></span>
-                    </button>
-                </td>
-            </tr>
+                <tr ng-repeat-start="patient in patients" >
+                    <th ng-click="show(patient)" scope="row" class="align-middle">{{$index + 1 + indexOffset}}</th>
+                    <td ng-click="show(patient)" class="align-middle">{{patient.name}}</td>
+                    <td ng-click="show(patient)" class="align-middle" ng-if="patient.sex === null"></td>
+                    <td ng-click="show(patient)" class="align-middle" ng-if="patient.sex !== null">{{patient.sex ? 'man' : 'woman'}}</td>
+                    <td ng-click="show(patient)" class="align-middle">{{patient.dayOfBirth}}</td>
+                    <td class="d-flex justify-content-end">
+                        <a href="#!/patients/add-file/{{patient.id}}"
+                           class="mx-2 btn btn-light btn-resize"
+                           data-toggle="tooltip"
+                           title="Add File">
+                            <i class="fas fa-file-upload"></i>
+                        </a>
+                        <a href="#!/patients/{{patient.id}}"
+                           class="mx-2 btn btn-light btn-resize"
+                           data-toggle="tooltip"
+                           title="Edit">
+                            <span class="fas fa-edit"></span>
+                        </a>
+                        <button type="button"
+                                data-toggle="modal"
+                                data-target="#exampleModal"
+                                ng-click="remove(patient)"
+                                class="mx-2 btn btn-light btn-resize"
+                                data-toggle="tooltip"
+                                title="Remove">
+                            <span class="fas fa-trash-alt"></span>
+                        </button>
+                    </td>
+                </tr>
+                <tr ng-repeat-end ng-show="patient.showFile">
+                    <td></td>
+                    <td colspan="4">
+                        <div ng-if="patient.files.length < 1" class="my-1 mx-3 text-danger">
+                            no files
+                        </div>
+                        <div ng-repeat="file in patient.files" class="my-1 mx-3 text-primary">
+                            <a download="{{file.fileName}}" ng-href="/patients/getFile/{{file.id}}">{{file.fileName}}</a>
+                            <a class="p-2" ng-click="deleteFile(file, patient.files)"
+                               title="Delete a file" style="cursor: pointer">
+                                <i class="text-danger fas fa-times"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
             </tbody>
             <tfoot>
             <tr>
                 <td>
                     <a class="btn btn-primary mt-3" href="#!/patients/new">Add</a>
                 </td>
-                <td colspan="6" >
+                <td colspan="4" >
                     <div class="d-flex justify-content-center align-items-center">
                         <div st-pagination="" st-items-by-page="itemsByPage" ></div>
                     </div>
@@ -64,7 +85,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                Do you really want to delete "{{removePatient.name}}"?
+                Do you really want to delete patient "{{removePatient.name}}" and all his files?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

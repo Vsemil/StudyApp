@@ -35,4 +35,25 @@ angular.module('app').controller('patientsListController', function($scope, $htt
             }
         })
     };
+
+    $scope.show = function (patient) {
+        if (patient.showFile === undefined) {
+            patient.showFile = false;
+        }
+        patient.showFile = !patient.showFile
+    };
+
+    $scope.deleteFile = function (file, files) {
+        $http.delete('/patients/deleteFile/' + file.id)
+            .then(function (value) {
+                AlertService.add('success', 'File ' + file.fileName + ' successfully removed');
+                    var index =files.indexOf(file);
+                    if (index !== -1) {
+                        files.splice(index, 1);
+                    }
+                },
+                function (error) {
+                AlertService.add('danger', error.data.message)
+            })
+    }
 });

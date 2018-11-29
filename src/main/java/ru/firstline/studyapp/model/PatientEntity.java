@@ -1,9 +1,8 @@
 package ru.firstline.studyapp.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "patient")
@@ -15,6 +14,11 @@ public class PatientEntity extends AbstractNamedEntity{
     @Column(name = "day_of_birth")
     private LocalDate dayOfBirth;
 
+    @OneToMany(cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
+    private List<DBFile> files;
+
     public PatientEntity() {
     }
 
@@ -22,6 +26,14 @@ public class PatientEntity extends AbstractNamedEntity{
         super(id, name);
         this.sex = sex;
         this.dayOfBirth = dayOfBirth;
+    }
+
+    public List<DBFile> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<DBFile> files) {
+        this.files = files;
     }
 
     public Boolean getSex() {

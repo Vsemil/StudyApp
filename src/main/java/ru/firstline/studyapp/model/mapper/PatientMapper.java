@@ -15,6 +15,7 @@ public class PatientMapper extends ConfigurableMapper {
                 .field("name", "name")
                 .field("sex", "sex")
                 .field("dayOfBirth", "dayOfBirth")
+                .field("files", "files")
                 .byDefault()
                 .register();
     }

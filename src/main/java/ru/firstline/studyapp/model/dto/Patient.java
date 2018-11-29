@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 public class Patient implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -12,6 +13,15 @@ public class Patient implements Serializable {
     private Boolean sex;
     @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDate dayOfBirth;
+    private List<FileDTO> files;
+
+    public List<FileDTO> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<FileDTO> fileIds) {
+        this.files = fileIds;
+    }
 
     public Integer getId() {
         return id;

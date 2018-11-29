@@ -1,4 +1,4 @@
-angular.module('app', ['smart-table', 'ngRoute', 'ngCookies'])
+angular.module('app', ['smart-table', 'ngRoute', 'ngCookies', 'lr.upload'])
     .config(function ($routeProvider) {
         $routeProvider.when('/',
             {
@@ -15,6 +15,11 @@ angular.module('app', ['smart-table', 'ngRoute', 'ngCookies'])
                 templateUrl:'resources/patients-list/edit/edit-patient.html',
                 controller:'editPatientController'
             })
+            .when('/patients/add-file/:id',
+                {
+                    templateUrl:'resources/patients-list/add-file/patient-add-file.html',
+                    controller:'patientAddFileController'
+                })
             .when('/doctors',
             {
                 templateUrl:'resources/doctor-list/doctor-list.html',
