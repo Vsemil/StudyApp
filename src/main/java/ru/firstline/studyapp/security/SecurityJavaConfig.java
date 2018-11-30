@@ -1,77 +1,117 @@
 package ru.firstline.studyapp.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import ru.firstline.studyapp.service.impl.StudyUserDetailsService;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
+import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
+import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.context.request.RequestContextListener;
 
+import javax.servlet.Filter;
+
+@Configuration
 @EnableWebSecurity
+@EnableOAuth2Client
 public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
 
-    public static final String REALM = "STUDY_REALM";
+    @Autowired
+    OAuth2ClientContext oauth2ClientContext;
 
     @Autowired
-    private StudyUserDetailsService userDetailsService;
+    Environment env;
 
-    @Autowired
-    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    private Filter ssoFilter() {
+        OAuth2ClientAuthenticationProcessingFilter googleFilter = new OAuth2ClientAuthenticationProcessingFilter("/login");
+        OAuth2RestTemplate googleTemplate = new OAuth2RestTemplate(google(), oauth2ClientContext);
+        googleFilter.setRestTemplate(googleTemplate);
 
-    @Autowired
-    private MySavedRequestAwareAuthenticationSuccessHandler mySuccessHandler;
+        UserInfoTokenServices tokenServices = new UserInfoTokenServices(googleResource().getUserInfoUri(), google().getClientId());
+        tokenServices.setRestTemplate(googleTemplate);
+        googleFilter.setTokenServices(tokenServices);
+        return googleFilter;
+    }
 
-    private SimpleUrlAuthenticationFailureHandler myFailureHandler = new SimpleUrlAuthenticationFailureHandler();
+//    @Bean
+//    public AuthorizationCodeResourceDetails google() {
+//        AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
+//        details.setAccessTokenUri(env.getProperty("security.oauth2.client.accessTokenUri"));
+//        details.setClientId(env.getProperty("security.oauth2.client.clientId"));
+//        details.setClientSecret(env.getProperty("security.oauth2.client.clientSecret"));
+//        details.setUserAuthorizationUri(env.getProperty("security.oauth2.client.userAuthorizationUri"));
+//        details.setAuthenticationScheme(AuthenticationScheme.form);
+//        details.setScope(Arrays.asList(env.getProperty("security.oauth2.client.scope").split(",")));
+//        return details;
+//    }
+//
+//    @Bean
+//    public ResourceServerProperties googleResource() {
+//        ResourceServerProperties resource = new ResourceServerProperties();
+//        resource.setUserInfoUri(env.getProperty("security.oauth2.resource.userInfoUri"));
+//        resource.setPreferTokenInfo(Boolean.parseBoolean(env.getProperty("security.oauth2.resource.preferTokenInfo")));
+//        return resource;
+//    }
 
-    @Override
-    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider());
+    @Bean
+    @ConfigurationProperties("security.oauth2.client")
+    public AuthorizationCodeResourceDetails google() {
+        return new AuthorizationCodeResourceDetails();
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(encoder());
-        return authProvider;
+    @ConfigurationProperties("security.oauth2.resource")
+    public ResourceServerProperties googleResource() {
+        return new ResourceServerProperties();
     }
 
     @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
+    public RequestContextListener requestContextListener() {
+        return new RequestContextListener();
+    }
+
+    @Bean
+    public FilterRegistrationBean oauth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(filter);
+        registration.setOrder(-100);
+        return registration;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .httpBasic().realmName(REALM).authenticationEntryPoint(restAuthenticationEntryPoint)
-                .and()
-                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
+                .antMatchers("/", "/swagger-ui.html", "/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .successHandler(mySuccessHandler)
-                .failureHandler(myFailureHandler)
-                .and()
-                .logout().logoutSuccessUrl("/");
+                .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
+
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring()
-                .antMatchers("/resources/**");
+        web.ignoring().antMatchers("/resources/**");
     }
+
+
+//    @Bean
+//    public PrincipalExtractor principalExtractor(UserRepository userRepository) {
+//        return map -> {
+//            return new UserEntity();
+//        };
+//    }
 }
 

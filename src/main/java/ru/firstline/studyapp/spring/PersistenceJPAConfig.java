@@ -22,7 +22,7 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories("ru.firstline.studyapp.repository")
-@PropertySource("classpath:/app.properties")
+@PropertySource("classpath:/application.properties")
 public class PersistenceJPAConfig {
 
     @Autowired
