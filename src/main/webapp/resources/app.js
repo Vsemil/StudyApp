@@ -57,16 +57,17 @@ angular.module('app', ['smart-table', 'ngRoute', 'ngCookies', 'lr.upload'])
             })
             .otherwise({redirectTo: '/'});
     })
-    .controller('mainController', function($scope, $location, USER_ROLES, AuthService, Session) {
+    .controller('mainController', function($http, $scope, $location, USER_ROLES, Session) {
         $scope.location = $location;
 
         $scope.session = Session;
         $scope.userRoles = USER_ROLES;
-        $scope.authService = AuthService;
 
         $scope.logout = function () {
-            Session.destroy();
-            $location.url('/');
+            $http.post('/logout').then(function (value) {
+                Session.destroy();
+                $location.url('/');
+            }, function (reason) {  })
         }
 
     })
@@ -122,8 +123,6 @@ angular.module('app', ['smart-table', 'ngRoute', 'ngCookies', 'lr.upload'])
             'request': function(config) {
                 if (Session.encodedString) {
                     config.headers = config.headers || {};
-                    //var encodedString = btoa(Session.username + ":" + Session.password);
-                    //var encodedString = btoa("1:1");
                     config.headers.Authorization = 'Basic ' + Session.encodedString;
                 }
                 return config;
@@ -133,57 +132,25 @@ angular.module('app', ['smart-table', 'ngRoute', 'ngCookies', 'lr.upload'])
     .config(['$httpProvider', function($httpProvider) {
         $httpProvider.interceptors.push('AuthInterceptor');
     }])
-    .factory('AuthService', function ($http, Session) {
-        var authService = {};
-
-        authService.login = function (credentials) {
-            var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-            var s = 'username='+ credentials.username + '&password=' + credentials.password;
-            return $http.post('/login', s, {headers: headers})
-                .then(function (res) {
-                    Session.create(credentials.username, credentials.password, res.data, credentials.save);
-                    return res.data;
-                });
-        };
-
-        authService.isAuthenticated = function () {
-            return !!Session.username;
-        };
-
-        authService.isAuthorized = function (authorizedRoles) {
-            if (!angular.isArray(authorizedRoles)) {
-                authorizedRoles = [authorizedRoles];
-            }
-            return (authService.isAuthenticated() && authorizedRoles.indexOf(Session.userRole) !== -1);
-        };
-
-        return authService;
-    })
     .service('Session', ['$cookies', function($cookies) {
 
         this.createOfCookies = function () {
-            if ($cookies.get('encodedString')) {
-                this.encodedString = $cookies.get('encodedString');
+            if ($cookies.get('XSRF-TOKEN')) {
                 this.username = $cookies.get('username');
                 this.userRole = $cookies.get('userRole');
             }
         };
 
-        this.create = function (username, password, userRole, save) {
-            this.username = username;
-            this.encodedString = btoa(username + ":" + password);
-            this.userRole = userRole;
-            if (save) {
-                $cookies.put('encodedString', this.encodedString);
-                $cookies.put('username', this.username);
-                $cookies.put('userRole', this.userRole);
-            }
+        this.create = function (user) {
+            this.username = user.username;
+            this.userRole = user.roles;
+            $cookies.put('username', this.username);
+            $cookies.put('userRole', this.userRole);
+
         };
         this.destroy = function () {
             this.username = null;
-            this.encodedString = null;
             this.userRole = null;
-            $cookies.remove('encodedString');
             $cookies.remove('username');
             $cookies.remove('userRole');
         };
@@ -201,23 +168,30 @@ angular.module('app', ['smart-table', 'ngRoute', 'ngCookies', 'lr.upload'])
         admin: 'ADMIN',
         editor: 'USER'
     })
-    .run(function ($rootScope, $location, AUTH_EVENTS, AuthService, Session) {
-        Session.createOfCookies();
-        $rootScope.$on('$routeChangeStart', function (event, next) {
-            // var authorizedRoles = next.data.authorizedRoles;
-            if (next.$$route.originalPath === '/login' || next.$$route.originalPath === '/'
-            || next.$$route.originalPath === '') {
-                if (next.$$route.originalPath !== '/login') {
-                    $rootScope.redir = '/'
-                }
+    .run(function ($rootScope, $location, AUTH_EVENTS, Session, $cookies, $http) {
+        $http.get('/user').then(function (value) {
+            if (value.data) {
+                Session.create(value.data);
             } else {
-                if (!AuthService.isAuthenticated()) {
+                Session.destroy();
+            }
+        });
+        $rootScope.$on('$routeChangeStart', function (event, next) {
+            if (!(next.$$route.originalPath === '/' || next.$$route.originalPath === '')) {
+                if (!Session.username) {
                     event.preventDefault();
-                    $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
                     $rootScope.redir = next.$$route.originalPath;
-                    $location.url('/login');
+                    Session.destroy();
+                    location.href = '/login'
                 } else {
-                    $rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+                    $http.get('/user').then(function (value) {
+                        if (value.data) {
+                            Session.create(value.data);
+                        } else {
+                            Session.destroy();
+                            event.preventDefault();
+                        }
+                    })
                 }
             }
         });

@@ -11,8 +11,14 @@ import java.util.List;
 @Table(name = "usr")
 public class UserEntity extends AbstractBaseEntity implements UserDetails {
 
-    @Column(nullable = false, unique = true, name = "username")
+    @Column(nullable = false, name = "username")
     private String username;
+
+    @Column(nullable = false, name = "email")
+    private String email;
+
+    @Column(nullable = false, unique = true, name = "principalId")
+    private String principalId;
 
     @Column(name = "password")
     private String password;
@@ -50,6 +56,22 @@ public class UserEntity extends AbstractBaseEntity implements UserDetails {
 
     public void setRoles(List<RoleEntity> roles) {
         this.roles = roles;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPrincipalId() {
+        return principalId;
+    }
+
+    public void setPrincipalId(String principalId) {
+        this.principalId = principalId;
     }
 
     @Override

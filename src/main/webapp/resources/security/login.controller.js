@@ -1,4 +1,4 @@
-angular.module('app').controller('loginController', function($scope, $rootScope, $location, AUTH_EVENTS, AuthService, AlertService) {
+angular.module('app').controller('loginController', function($scope, $rootScope, $location, AUTH_EVENTS, AlertService) {
     $scope.credentials = {};
 
     $scope.login = function (credentials) {

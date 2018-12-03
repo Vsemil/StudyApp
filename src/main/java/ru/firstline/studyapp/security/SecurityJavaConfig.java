@@ -2,6 +2,7 @@ package ru.firstline.studyapp.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -29,6 +30,9 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     OAuth2ClientContext oauth2ClientContext;
 
+    @Autowired
+    PrincipalExtractor principalExtractor;
+
     private Filter ssoFilter() {
         OAuth2ClientAuthenticationProcessingFilter googleFilter = new OAuth2ClientAuthenticationProcessingFilter("/login");
         OAuth2RestTemplate googleTemplate = new OAuth2RestTemplate(google(), oauth2ClientContext);
@@ -36,6 +40,7 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
 
         UserInfoTokenServices tokenServices = new UserInfoTokenServices(googleResource().getUserInfoUri(), google().getClientId());
         tokenServices.setRestTemplate(googleTemplate);
+        tokenServices.setPrincipalExtractor(principalExtractor);
         googleFilter.setTokenServices(tokenServices);
         return googleFilter;
     }
@@ -56,10 +61,9 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/swagger-ui.html", "/login").permitAll()
+                .antMatchers("/", "/swagger-ui.html", "/login", "/user").permitAll()
                 .anyRequest().authenticated()
                 .and()
-//                .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
                 .addFilterAfter(new OAuth2ClientContextFilter(), AbstractPreAuthenticatedProcessingFilter.class)
                 .addFilterAfter(ssoFilter(), OAuth2ClientContextFilter.class)
                 .logout().logoutSuccessUrl("/").permitAll()
@@ -70,13 +74,5 @@ public class SecurityJavaConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/resources/**");
     }
-
-
-//    @Bean
-//    public PrincipalExtractor principalExtractor(UserRepository userRepository) {
-//        return map -> {
-//            return new UserEntity();
-//        };
-//    }
 }
 
