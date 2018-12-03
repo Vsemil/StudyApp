@@ -33,7 +33,7 @@
                     <a class="nav-link" href="#!/rooms">Rooms</a>
                 </li>
             </ul>
-            <a ng-if="!session.username" class="btn btn-outline-light my-2 my-sm-0" href="#!/login">Login</a>
+            <a ng-if="!session.username" class="btn btn-outline-light my-2 my-sm-0" href="/login">Login</a>
             <div ng-if="session.username" class="d-flex flex-row">
                 <div class="my-auto mx-3 text-light">{{session.username}}</div>
                 <button class="btn btn-outline-light my-2 my-sm-0" ng-click="logout()">Logout</button>
