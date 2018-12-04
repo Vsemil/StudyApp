@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public class Study implements Serializable {
     private static final long serialVersionUID = 1L;
-    private Integer id;
+    private String id;
     private Patient patient;
     private String description;
     private Status status;
@@ -17,11 +17,11 @@ public class Study implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
     private LocalDateTime estimatedEndTime;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

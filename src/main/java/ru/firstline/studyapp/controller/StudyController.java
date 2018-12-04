@@ -14,12 +14,17 @@ public class StudyController {
     private StudyService studyService;
 
     @GetMapping(value = "/all")
-    public Page<Study> getAll(Pageable pageable) {
-        return studyService.findAll(pageable);
+    public Page<Study> getAll(Pageable pageable,
+                              @RequestParam(value="searchWord", required = false) String searchWord) {
+        if (searchWord == null) {
+            return studyService.findAll(pageable);
+        } else {
+            return studyService.findAll(pageable, searchWord);
+        }
     }
 
     @GetMapping(value = "/{id}")
-    public Study getById(@PathVariable Integer id) {
+    public Study getById(@PathVariable String id) {
         return studyService.findById(id);
     }
 
@@ -29,7 +34,7 @@ public class StudyController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable Integer id) {
+    public void delete(@PathVariable String id) {
         studyService.delete(id);
     }
 

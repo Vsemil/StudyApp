@@ -2,6 +2,17 @@
 <div class="row">
     <div class="col-sm">
         <table class="table table-hover" st-table="study" st-pipe="getStudy">
+            <thead class="">
+                <tr>
+                    <th colspan="7" scope="col">
+                        <form class="form-inline my-2 my-lg-0" >
+                            <input class="form-control mr-sm-2 ml-auto" type="search" placeholder="Search"
+                                   aria-label="Search" st-search="searchWord" ng-model="searchWord">
+                            <button class="btn btn-outline-primary my-2 my-sm-0">Search</button>
+                        </form>
+                    </th>
+                </tr>
+            </thead>
             <thead class="thead-light">
             <tr>
                 <th scope="col" style="width: 5%">#</th>

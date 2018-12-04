@@ -1,5 +1,7 @@
 package ru.firstline.studyapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -12,6 +14,7 @@ public class PatientEntity extends AbstractNamedEntity{
     private Boolean sex;
 
     @Column(name = "day_of_birth")
+    @JsonIgnore
     private LocalDate dayOfBirth;
 
     @OneToMany(cascade = CascadeType.ALL,

@@ -1,5 +1,10 @@
 package ru.firstline.studyapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
@@ -7,11 +12,18 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "study")
-public class StudyEntity extends AbstractBaseEntity {
+@Document(indexName = "studyapp", type = "study")
+public class StudyEntity {
+
+    @Id
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    protected String id;
 
     @ManyToOne
     @JoinColumn(name = "patient_id", referencedColumnName = "id", nullable = false)
     @NonNull
+    @Field(type = FieldType.Nested, includeInParent = true)
     private PatientEntity patient;
 
     @Column(name = "description", nullable = false)
@@ -25,21 +37,31 @@ public class StudyEntity extends AbstractBaseEntity {
 
     @Column(name = "planned_start_time", nullable = false)
     @NonNull
+    @JsonIgnore
     private LocalDateTime plannedStartTime;
 
     @Column(name = "estimated_end_time")
+    @JsonIgnore
     private LocalDateTime estimatedEndTime;
 
     public StudyEntity() {
     }
 
-    public StudyEntity(Integer id, PatientEntity patient, String description, Status status, LocalDateTime plannedStartTime, LocalDateTime estimatedEndTime) {
-        super(id);
+    public StudyEntity(String id, PatientEntity patient, String description, Status status, LocalDateTime plannedStartTime, LocalDateTime estimatedEndTime) {
+        this.id = id;
         this.patient = patient;
         this.description = description;
         this.status = status;
         this.plannedStartTime = plannedStartTime;
         this.estimatedEndTime = estimatedEndTime;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public PatientEntity getPatient() {

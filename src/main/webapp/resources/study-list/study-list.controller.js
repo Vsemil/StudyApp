@@ -11,6 +11,9 @@ angular.module('app').controller('studyListController', function($scope, $http, 
             page: (start / number),
             size: number
         };
+        if (tableState.search.predicateObject) {
+            ret.searchWord = tableState.search.predicateObject.searchWord;
+        }
         $http.get('/study/all', {params: ret}).then(function (response) {
             tableState.pagination.numberOfPages = response.data.totalPages;
             $scope.study = response.data.content;
