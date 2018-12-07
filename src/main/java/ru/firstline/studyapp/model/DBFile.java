@@ -16,7 +16,7 @@ public class DBFile {
 
     private String fileType;
 
-    private String Path;
+    private String path;
 
     @ManyToOne
     private PatientEntity patient;
@@ -25,10 +25,10 @@ public class DBFile {
     }
 
     public DBFile(String fileName, String fileType, String path, PatientEntity patient) {
-        this.patient = patient;
         this.fileName = fileName;
         this.fileType = fileType;
-        Path = path;
+        this.path = path;
+        this.patient = patient;
     }
 
     public String getId() {
@@ -56,11 +56,11 @@ public class DBFile {
     }
 
     public String getPath() {
-        return Path;
+        return path;
     }
 
     public void setPath(String path) {
-        Path = path;
+        path = path;
     }
 
     public PatientEntity getPatient() {

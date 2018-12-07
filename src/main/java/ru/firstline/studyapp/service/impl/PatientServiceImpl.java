@@ -18,6 +18,7 @@ import ru.firstline.studyapp.repository.DBFileRepository;
 import ru.firstline.studyapp.repository.PatientRepository;
 import ru.firstline.studyapp.service.PatientService;
 
+import javax.transaction.Transactional;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class PatientServiceImpl implements PatientService {
 
     private static String UPLOADED_FOLDER = "/home/ivan/temp/";

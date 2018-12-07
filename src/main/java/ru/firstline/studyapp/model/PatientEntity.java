@@ -8,6 +8,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "patient")
+@NamedEntityGraphs({
+        @NamedEntityGraph(name="allFiles", attributeNodes = {
+                @NamedAttributeNode("files")
+        })
+})
 public class PatientEntity extends AbstractNamedEntity{
 
     @Column(name = "sex")
@@ -17,9 +22,8 @@ public class PatientEntity extends AbstractNamedEntity{
     @JsonIgnore
     private LocalDate dayOfBirth;
 
-    @OneToMany(cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+//    @Fetch(FetchMode.SUBSELECT)
     private List<DBFile> files;
 
     public PatientEntity() {
